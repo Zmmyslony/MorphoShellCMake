@@ -131,5 +131,5 @@ void initialize_directories(
 
     // We store the path to the output dir, 
     // converted to a std::string.
-    stuff.output_dir_path = std::string(cwd / output_dir);
+    stuff.output_dir_path = (cwd / output_dir).string();
 }

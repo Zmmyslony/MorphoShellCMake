@@ -28,6 +28,7 @@ along with MorphoShell. If not, contact Daniel Duffy, daniellouisduffy@gmail.com
 #include <string> // Used for creating directory for output data
 #include <vector>// Used for some vectors
 #include <iomanip> // For setting time and date format, and std::out precision if needed
+#include <chrono>
 
 #include "get_real_time.hpp"
 #include "extract_filename.hpp"
@@ -72,7 +73,7 @@ along with MorphoShell. If not, contact Daniel Duffy, daniellouisduffy@gmail.com
 
 
 int main(int argc, char *argv[]){
-
+    omp_set_num_threads(8);
 // First, some checks and setting
 // up the output directory, log file, etc.
 Out_Stream_Class log;
@@ -267,7 +268,7 @@ log << "Beginning dynamics loop." << std::endl;
 
 // Begin dynamics loop.
 while( true ){
-
+    auto begin = std::chrono::high_resolution_clock::now();
     // Once the gradient descent dynamics (if any) have finished,
     // switch to Newtonian dynamics.
     if( stuff.using_gradient_descent_dynamics && stepcount > stuff.num_steps_to_use_gradient_descent_dynamics_for_before_switching_to_newtonian_dynamics ){
@@ -416,12 +417,17 @@ while( true ){
                 normals,
                 continuum_quantities, 
                 stuff);
+
+        auto mechanics_time = std::chrono::high_resolution_clock::now();
+
         calc_curvatures(curvatures, continuum_quantities, b_comps, stuff);
         calc_angle_deficits(angle_deficits, dofs, nodes, triangles, stuff);
         calc_energy_densities(energy_densities, a_comps, b_comps, abar_comps, bbar_comps, def_shear_moduli, def_thicknesses, stuff, log);
         calc_energies(energies, energy_densities, velocities, dof_masses, triangles, stuff);
         calc_stresses(stresses, continuum_quantities, abar_comps, bbar_comps, def_shear_moduli, def_thicknesses, triangles, stuff, log);
         calc_strains(strains, continuum_quantities, a_comps, abar_comps, stuff);
+        auto prep_time = std::chrono::high_resolution_clock::now();
+
         try{write_output(
             dofs, 
             triangles, 
@@ -434,8 +440,17 @@ while( true ){
             strains,
             energies,       
             stuff);} catch(const std::runtime_error &error){log << "At stepcount = " << stepcount << ", dial_factor = " << dial_factor << " there was a problem: " << error.what() << std::endl; return -1;}
-        log << "Wrote VTK output at " << get_real_time() << ", stepcount = " << stepcount << ", simulation time = " << time+stuff.timestep << ", current dial factor = " << dial_factor << std::endl;
+        auto export_time = std::chrono::high_resolution_clock::now();
+
+        long long mechanics_us = std::chrono::duration_cast<std::chrono::microseconds>(mechanics_time - begin).count();
+        long long prep_us = std::chrono::duration_cast<std::chrono::microseconds>(prep_time - mechanics_time).count();
+        long long export_us = std::chrono::duration_cast<std::chrono::microseconds>(export_time - prep_time).count();
+
+        log << "Wrote VTK output at " << get_real_time() << ", stepcount = " << stepcount << ", simulation time = "
+        << time+stuff.timestep << ", current dial factor = " << dial_factor
+         << ", execution time: " << mechanics_us << "/" << prep_us << "/" << export_us << " us" << std::endl;
     }
+
 
 
     // Advance dynamics (i.e. time integration).
@@ -490,7 +505,7 @@ while( true ){
 
     // If equilibrium has been reached and we are at the end of the 
     // simulation, terminate the while(true) loop.
-    if( dial_factor >= 1.0 && stuff.status == equil_reached && stuff.slide_stiffness_prefactor > 0.0 ){ 
+    if( dial_factor >= 1.0 && stuff.status == equil_reached){
         break;
     }
 

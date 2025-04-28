@@ -24,8 +24,10 @@ along with MorphoShell. If not, contact Daniel Duffy, daniellouisduffy@gmail.com
 
 #include <ctime>
 #include <string>
-#include <iomanip> 
-
+#include <iomanip>
+#ifdef _WIN32
+#include <sstream>
+#endif
 #include "get_real_time.hpp"
 
 std::string get_real_time(){

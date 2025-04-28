@@ -10,6 +10,7 @@ from math import sqrt, atan2, acos, sin, cos, pi
 import matplotlib.pyplot as plt
 
 import distmesh as dm
+import os
 
 from mesh_processing_module import (
     write_VTK,
@@ -25,8 +26,7 @@ from scipy import optimize
 
 
 # Set working directory. Can be relative to python script.
-workingDir = '/home/daniel/c++_stuff/gauss-codazzi-mainardi/files_from_python'
-
+workingDir = os.getcwd()
 
 
 Ri = 1.0

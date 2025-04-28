@@ -228,14 +228,11 @@ void do_dialling(
     }
 
 
-
-
-    // NOW LET'S DIAL DEF_THICKNESS.
-    // UNCOMMENT THE APPROPRIATE LINE, OR 
-    // ADD YOUR OWN!
     #pragma omp parallel for simd
     for(int t = 0; t < stuff.num_tris; ++t){
-
+        // NOW LET'S DIAL DEF_THICKNESS.
+        // UNCOMMENT THE APPROPRIATE LINE, OR
+        // ADD YOUR OWN!
         // 1)
         // No changing of thickness during deformation.
         def_thicknesses(t) = triangles[t].ref_thickness; 
@@ -244,13 +241,10 @@ void do_dialling(
         // LCE with "opto-thermal Poisson ratio" of 1/2.
         //def_thicknesses(t) = triangles[t].ref_thickness / sqrt(abar_comps(t,0)*abar_comps(t,2) - abar_comps(t,1)*abar_comps(t,1));
 
-    }
 
-    // NOW LET'S DIAL DEF_SHEAR_MODULUS.
-    // UNCOMMENT THE APPROPRIATE LINE, OR 
-    // ADD YOUR OWN!
-    #pragma omp parallel for simd
-    for(int t = 0; t < stuff.num_tris; ++t){
+        // NOW LET'S DIAL DEF_SHEAR_MODULUS.
+        // UNCOMMENT THE APPROPRIATE LINE, OR
+        // ADD YOUR OWN!
 
         // 1)
         // No changing of shear modulus during deformation.

@@ -168,7 +168,7 @@ void read_vtk_data(
             }
         }
     } 
-    if( not found_zero ){
+    if( ! found_zero ){
         throw std::runtime_error(
             "Error: MorphoShell requires the triangulation you provide to use node ids starting from 0. "
             "It appears that the triangulation you provided did not do this, since it didn't contain a 0 anywhere.");

@@ -30,7 +30,7 @@ LIBS = -fopenmp
 
 # This specifies the compiler command (executable) to execute. So for a normal sudo apt install gcc-9
 # installation this should be fine:
-CXX = g++-11
+CXX = g++
 # But if you had to install gcc-9 manually you *may* need something like this instead:
 # CXX = /opt/gcc-9.3.0/bin/g++
 
@@ -38,7 +38,7 @@ CXX = g++-11
 VPATH = ./source_files
 
 # Name of executable file to make.
-EXEFILE = ../morphoshell
+EXEFILE = ./morphoshell.exe
 
 
 # Directory to put .o files in to avoid mess.
@@ -109,11 +109,8 @@ advance_dynamics.o \
 
 .PHONY: clean
 clean:
-#	rm *.o  $(EXEFILE) # from older version
-	rm -r $(OBJDIR) $(EXEFILE)
+	rm -r $(OBJ_DIR) $(TARGET)
 	
-	
-$(OBJECTS): | $(OBJDIR)
 
 $(OBJDIR):
 	mkdir -p $(OBJDIR)

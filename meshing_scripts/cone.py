@@ -30,13 +30,18 @@ def azimuthal_director(nodes, triangles):
     return np.mod(np.arctan2(centroids[:, 1], centroids[:, 0]) + np.pi / 2, np.pi)
 
 
-def deformation_metric_info(director_angle, elongation, poisson_ratio=0.5):
-    """ The LCE mode (setting 3 in the do_dialling.cpp) takes in
-     [theta, lambda, poisson]"""
+def deformation_metric_info(director_angle, elongation, poisson_ratio=0.5, is_lce_mode=False):
+    """ The LCE mode (setting 3 in the do_dialling.cpp) takes in [theta, lambda, poisson], else
+    a_xx, a_xy, a_yy. """
     preferred_metric = np.empty([director_angle.shape[0], 3])
-    preferred_metric[:, 0] = director_angle
-    preferred_metric[:, 1] = np.full_like(director_angle, elongation)
-    preferred_metric[:, 2] = np.full_like(director_angle, poisson_ratio)
+    if is_lce_mode:
+        preferred_metric[:, 0] = director_angle
+        preferred_metric[:, 1] = np.full_like(director_angle, elongation)
+        preferred_metric[:, 2] = np.full_like(director_angle, poisson_ratio)
+    else:
+        preferred_metric[:, 0] = elongation ** 2 * np.cos(director_angle) ** 2 + elongation ** (- 2 * poisson_ratio) * np.sin(director_angle) ** 2
+        preferred_metric[:, 1] = (elongation ** 2 - elongation ** (-2 * poisson_ratio)) * np.sin(director_angle) * np.cos(director_angle)
+        preferred_metric[:, 2] = elongation ** 2 * np.sin(director_angle) ** 2 + elongation ** (- 2 * poisson_ratio) * np.cos(director_angle) ** 2
     return preferred_metric
 
 def deformation_bend(director_angle, elongation):

@@ -73,7 +73,7 @@ void advance_dynamics(
     }
 
 
-    #pragma omp parallel for simd
+    #pragma omp parallel for
     for(int d = 0; d < stuff.num_dofs; ++d){
 
         // Advance velocity before position (Semi-Implicit Euler, also

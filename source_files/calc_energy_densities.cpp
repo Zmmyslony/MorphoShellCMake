@@ -43,7 +43,7 @@ void calc_energy_densities(
     const Stuff_Class &stuff,
     [[maybe_unused]] Out_Stream_Class &log){
 
-    #pragma omp parallel for simd
+    #pragma omp parallel for
     for(int t = 0; t < stuff.num_tris; ++t){
 
         double a0 = a_comps(t,0);

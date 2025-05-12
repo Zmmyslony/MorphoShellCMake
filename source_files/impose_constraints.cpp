@@ -53,7 +53,7 @@ void impose_constraints(
     [[maybe_unused]] const std::vector<Tri_Class> &triangles,
     [[maybe_unused]] const Stuff_Class &stuff){
 
-    #pragma omp parallel for simd
+    #pragma omp parallel for
     for( int n = 0; n < stuff.num_nodes; ++n ){
 
         if( nodes[n].is_constrained ){

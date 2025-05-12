@@ -37,7 +37,7 @@ void calc_angle_deficits(
 
     const double pi = 3.14159265358979323846;
 
-    #pragma omp parallel for simd
+    #pragma omp parallel for
     for( int n = 0; n < stuff.num_nodes; ++n ){
 
         if( nodes[n].is_boundary ){

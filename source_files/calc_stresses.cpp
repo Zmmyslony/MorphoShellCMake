@@ -42,7 +42,7 @@ void calc_stresses(
     [[maybe_unused]] Out_Stream_Class &log){
 
 
-    #pragma omp parallel for simd
+    #pragma omp parallel for
     for(int t = 0; t < stuff.num_tris; ++t){
 
         Eigen::Matrix<double,3,3> cauchy_stress;

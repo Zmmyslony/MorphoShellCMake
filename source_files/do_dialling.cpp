@@ -228,7 +228,7 @@ void do_dialling(
     }
 
 
-    #pragma omp parallel for simd
+    #pragma omp parallel for
     for(int t = 0; t < stuff.num_tris; ++t){
         // NOW LET'S DIAL DEF_THICKNESS.
         // UNCOMMENT THE APPROPRIATE LINE, OR

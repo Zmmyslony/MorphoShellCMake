@@ -41,7 +41,7 @@ void calc_non_deformation_forces(
     const Eigen::Matrix<double,Eigen::Dynamic,1> &dof_masses,
     Stuff_Class &stuff){
 
-    #pragma omp parallel for simd
+    #pragma omp parallel for
     for( int d = 0; d < stuff.num_dofs; ++d ){
 
         /* Linear viscous damping force to ensure equilibrium is approached.

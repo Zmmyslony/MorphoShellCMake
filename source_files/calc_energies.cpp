@@ -42,20 +42,20 @@ void calc_energies(
     const Stuff_Class &stuff){
 
     std::vector<double> temp(stuff.num_tris);
-    #pragma omp parallel for simd
+    #pragma omp parallel for
     for(int t = 0; t < stuff.num_tris; ++t){
         temp[t] = triangles[t].ref_area * energy_densities(t,0);
     }
     energies[0] = kahan_sum(temp); // Total stretch energy.
 
-    #pragma omp parallel for simd
+    #pragma omp parallel for
     for(int t = 0; t < stuff.num_tris; ++t){
         temp[t] = triangles[t].ref_area * energy_densities(t,1);
     }
     energies[1] = kahan_sum(temp); // Total bend energy.
 
     temp.resize(stuff.num_nodes);
-    #pragma omp parallel for simd
+    #pragma omp parallel for
     for(int n = 0; n < stuff.num_nodes; ++n){
         Eigen::Vector3d vel_vec {velocities(n), velocities(n+stuff.num_nodes), velocities(n+2*stuff.num_nodes)};
         temp[n] = 0.5 * dof_masses(n) * vel_vec.squaredNorm();

@@ -32,7 +32,7 @@ void calc_curvatures(
     const Eigen::Matrix<double,Eigen::Dynamic,3> &b_comps,
     const Stuff_Class &stuff){
 
-    #pragma omp parallel for simd
+    #pragma omp parallel for
     for(int t = 0; t < stuff.num_tris; ++t){
 
         // Index into continuum_quantities that is the start of triangle t's set of 15 continuum quantities

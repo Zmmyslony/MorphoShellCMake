@@ -59,7 +59,7 @@ bool is_at_equilibrium(
     std::vector<double> node_speeds(stuff.num_nodes);
 
     // Calculate node non-damping forces and scaled speeds.
-    #pragma omp parallel for simd
+    #pragma omp parallel for
     for( int n = 0; n < stuff.num_nodes; ++n ){
 
         Eigen::Vector3d force_vec = {forces(n), forces(n+stuff.num_nodes), forces(n+2*stuff.num_nodes)};

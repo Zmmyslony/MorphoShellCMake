@@ -57,7 +57,7 @@ def ansatz_nodes(nodes, steepness=-0.1):
 if __name__ == "__main__":
     target_elongation = 0.9
     nodes, triangles = disk_mesh(10, 50)
-    working_directory = Path(os.getcwd()) / "output"
+    working_directory = Path(os.getcwd()).parent / "input_files"
     working_directory.mkdir(parents=True, exist_ok=True)
 
     director_angle = azimuthal_director(nodes, triangles)

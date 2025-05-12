@@ -65,9 +65,6 @@ if __name__ == "__main__":
     constraint_indicators = np.zeros_like(node_tags)
 
     triangulation = tri.Triangulation(nodes[:, 0], nodes[:, 1], triangles)
-    # plt.tripcolor(triangulation, director_angle)
-    # plt.colorbar()
-    # plt.show()
 
     write_VTK((working_directory / "cone_ref.vtk").__str__(),
               ' ',

@@ -66,9 +66,9 @@ void calc_non_deformation_forces(
 
     for( int n = 0; n < stuff.num_nodes; ++n ){
 
-        // Squashing between two "glass slides". 
-        // The lower slide is stationary, while 
-        // the upper slide moves vertically (see 
+        // Squashing between two "glass slides".
+        // The lower slide is stationary, while
+        // the upper slide moves vertically (see
         // advance_dynamics.cpp).
         double node_z_coord = dofs(2*stuff.num_nodes + n);
         double slide_z_coord;
@@ -83,9 +83,9 @@ void calc_non_deformation_forces(
             node_is_contacting_lower_slide = true;
         }
         if( (node_is_contacting_upper_slide || node_is_contacting_lower_slide) && stuff.slide_stiffness_prefactor > 0.0 ){
-            double slide_vert_force = stuff.slide_stiffness_prefactor * 
-                                    stuff.min_ref_shear_modulus * 
-                                    stuff.min_ref_thickness * 
+            double slide_vert_force = stuff.slide_stiffness_prefactor *
+                                    stuff.min_ref_shear_modulus *
+                                    stuff.min_ref_thickness *
                                     (slide_z_coord - node_z_coord);
             forces(2*stuff.num_nodes + n)  += slide_vert_force;
             if( node_is_contacting_upper_slide ){
@@ -95,8 +95,8 @@ void calc_non_deformation_forces(
                 stuff.lower_slide_tot_vert_force += slide_vert_force;
             }
 
-            // Slide friction. Sticking or sliding 
-            // depending on the normal force. 
+            // Slide friction. Sticking or sliding
+            // depending on the normal force.
             // Simplest friction model I could think of.
             double non_friction_horiz_force_size = sqrt(forces(n)*forces(n) + forces(stuff.num_nodes + n)*forces(stuff.num_nodes + n));
             if( non_friction_horiz_force_size < stuff.slide_friction_coefficent * fabs(slide_vert_force) ){

@@ -50,7 +50,7 @@ void calc_deformation_forces(
     const Stuff_Class &stuff,
     [[maybe_unused]] Out_Stream_Class &log){
 
-    #pragma omp parallel for simd
+    #pragma omp parallel for
     for(int t = 0; t < stuff.num_tris; ++t){
 
         // Index into continuum_quantities that is the start of triangle t's set of 15 continuum quantities

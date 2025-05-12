@@ -27,7 +27,10 @@ def disk_mesh(radius, linear_element_count):
 
 def azimuthal_director(nodes, triangles):
     centroids = np.mean(nodes[triangles], axis=1)
-    return np.mod(np.arctan2(centroids[:, 1], centroids[:, 0]) + np.pi / 2, np.pi)
+
+    radius = np.sqrt(centroids[:, 0] ** 2 + centroids[:, 1] ** 2)
+    polar_angle = np.arctan2(centroids[:, 1], centroids[:, 0])
+    return np.mod(polar_angle + np.pi / 2, np.pi)
 
 
 def deformation_metric_info(director_angle, elongation, poisson_ratio=0.5, is_lce_mode=False):
@@ -56,21 +59,19 @@ def ansatz_nodes(nodes, steepness=-0.1):
 
 if __name__ == "__main__":
     target_elongation = 0.9
-    nodes, triangles = disk_mesh(10, 50)
-    working_directory = Path(os.getcwd()).parent / "input_files"
-    working_directory.mkdir(parents=True, exist_ok=True)
 
+    nodes, triangles = disk_mesh(10, 50)
     director_angle = azimuthal_director(nodes, triangles)
 
     tri_tags = np.zeros(triangles.shape[0])
-    ref_shear_moduli = -np.ones_like(tri_tags)
-    ref_thicknesses = -np.ones_like(tri_tags)
+    ref_shear_moduli = -np.ones_like(tri_tags) # If negative, all triangles are uniform
+    ref_thicknesses = -np.ones_like(tri_tags) # If negative, all triangles are uniform
 
     node_tags = np.zeros(nodes.shape[0])
-    constraint_indicators = np.zeros_like(node_tags)
+    constraint_indicators = np.zeros_like(node_tags) # Which nodes are clamped
 
-    triangulation = tri.Triangulation(nodes[:, 0], nodes[:, 1], triangles)
-
+    working_directory = Path(os.getcwd()).parent / "input_files"
+    working_directory.mkdir(parents=True, exist_ok=True)
     write_VTK((working_directory / "cone_ref.vtk").__str__(),
               ' ',
               nodes,

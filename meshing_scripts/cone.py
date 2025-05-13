@@ -13,17 +13,19 @@ from mesh_processing_module import write_VTK
 
 
 def disk_mesh(radius, linear_element_count):
-    dist = lambda p: dm.dcircle(p, 0, 0, radius)
-    coarsening = lambda p: dm.huniform(p)
-    element_size = 2 * radius / linear_element_count
-    bounds = 1.1 * radius * np.array((-1, -1, 1, 1))
+    dist = lambda p: dm.dcircle(p, 0, 0, radius) # Defines geometry
+    coarsening = lambda p: dm.huniform(p) # Defines if certain regions have smaller elements than the rest
+    element_size = 2 * radius / linear_element_count # Desired size of an element
+    bounds = 1.1 * radius * np.array((-1, -1, 1, 1)) # Rectangular domain that is larger than the pattern that we want
 
-    nodes, triangles = dm.distmesh2d(dist, coarsening, element_size, bounds)
+    nodes, triangles = dm.distmesh2d(dist, coarsening, element_size, bounds) # Mesh generation
     print("Finished creating mesh.")
     print(f"Nodes: {nodes.shape[0]}")
     print(f"Triangles: {triangles.shape[0]}")
     return nodes, triangles
 
+def rectangle_mesh(length, width, linear_element_count):
+    ... """ Read distmesh documentation """
 
 # def azimuthal_director(nodes, triangles):
 #     centroids = np.mean(nodes[triangles], axis=1)
@@ -38,9 +40,9 @@ def disk_mesh(radius, linear_element_count):
 #     return 1 * polar_angle + 0
 
 def topological_defect_director(nodes, triangles, charge, angular_offset=0.):
-    centroids = np.mean(nodes[triangles], axis=1)
-    polar_angle = np.arctan2(centroids[:, 1], centroids[:, 0])
-    return charge * polar_angle + angular_offset
+    centroids = np.mean(nodes[triangles], axis=1) # We need director at triangle, so we need triangle position, which we take to be centroids.
+    polar_angle = np.arctan2(centroids[:, 1], centroids[:, 0]) # We compute triangles' polar angles
+    return charge * polar_angle + angular_offset # Calculate topological defect director
 
 def radial_director(nodes, triangles):
     return topological_defect_director(nodes, triangles, 1, 0)

@@ -25,12 +25,28 @@ def disk_mesh(radius, linear_element_count):
     return nodes, triangles
 
 
-def azimuthal_director(nodes, triangles):
-    centroids = np.mean(nodes[triangles], axis=1)
+# def azimuthal_director(nodes, triangles):
+#     centroids = np.mean(nodes[triangles], axis=1)
+#
+#     radius = np.sqrt(centroids[:, 0] ** 2 + centroids[:, 1] ** 2)
+#     polar_angle = np.arctan2(centroids[:, 1], centroids[:, 0])
+#     return 1 * polar_angle + np.pi / 2
+#
+# def radial_director(nodes, triangles):
+#     centroids = np.mean(nodes[triangles], axis=1)
+#     polar_angle = np.arctan2(centroids[:, 1], centroids[:, 0])
+#     return 1 * polar_angle + 0
 
-    radius = np.sqrt(centroids[:, 0] ** 2 + centroids[:, 1] ** 2)
+def topological_defect_director(nodes, triangles, charge, angular_offset=0.):
+    centroids = np.mean(nodes[triangles], axis=1)
     polar_angle = np.arctan2(centroids[:, 1], centroids[:, 0])
-    return np.mod(polar_angle + np.pi / 2, np.pi)
+    return charge * polar_angle + angular_offset
+
+def radial_director(nodes, triangles):
+    return topological_defect_director(nodes, triangles, 1, 0)
+
+def azimuthal_director(nodes, triangles):
+    return topological_defect_director(nodes, triangles, 1, np.pi / 2)
 
 
 def deformation_metric_info(director_angle, elongation, poisson_ratio=0.5, is_lce_mode=False):
@@ -61,7 +77,7 @@ if __name__ == "__main__":
     target_elongation = 0.9
 
     nodes, triangles = disk_mesh(10, 50)
-    director_angle = azimuthal_director(nodes, triangles)
+    director_angle = topological_defect_director(nodes, triangles, 0.5)
 
     tri_tags = np.zeros(triangles.shape[0])
     ref_shear_moduli = -np.ones_like(tri_tags) # If negative, all triangles are uniform
@@ -72,7 +88,7 @@ if __name__ == "__main__":
 
     working_directory = Path(os.getcwd()).parent / "input_files"
     working_directory.mkdir(parents=True, exist_ok=True)
-    write_VTK((working_directory / "cone_ref.vtk").__str__(),
+    write_VTK((working_directory / "topological_defect_0.5.vtk").__str__(),
               ' ',
               nodes,
               triangles,

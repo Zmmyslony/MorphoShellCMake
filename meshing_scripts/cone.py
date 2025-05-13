@@ -25,7 +25,8 @@ def disk_mesh(radius, linear_element_count):
     return nodes, triangles
 
 def rectangle_mesh(length, width, linear_element_count):
-    ... """ Read distmesh documentation """
+    """ Read distmesh documentation and base on the diskmesh """
+    return 0
 
 # def azimuthal_director(nodes, triangles):
 #     centroids = np.mean(nodes[triangles], axis=1)

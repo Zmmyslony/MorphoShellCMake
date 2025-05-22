@@ -550,7 +550,7 @@ def write_VTK(fileName, headerText, nodes, triangulation, abar_info, bbar_info, 
         nodes3D = nodes
 
     with open(fileName, 'w') as file:
-
+        print(f"Exporting to {fileName}")
         # Write preamble and node coordinates to file.
         preamble = "# vtk DataFile Version 2.0\n" + headerText + "\n" + "ASCII\n" + "DATASET POLYDATA\n" + "POINTS %d double" % numNodes
         np.savetxt(file, nodes3D, fmt=fp_fmt, delimiter=' ', header=preamble, comments='')

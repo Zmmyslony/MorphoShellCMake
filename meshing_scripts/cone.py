@@ -28,17 +28,6 @@ def rectangle_mesh(length, width, linear_element_count):
     """ Read distmesh documentation and base on the diskmesh """
     return 0
 
-# def azimuthal_director(nodes, triangles):
-#     centroids = np.mean(nodes[triangles], axis=1)
-#
-#     radius = np.sqrt(centroids[:, 0] ** 2 + centroids[:, 1] ** 2)
-#     polar_angle = np.arctan2(centroids[:, 1], centroids[:, 0])
-#     return 1 * polar_angle + np.pi / 2
-#
-# def radial_director(nodes, triangles):
-#     centroids = np.mean(nodes[triangles], axis=1)
-#     polar_angle = np.arctan2(centroids[:, 1], centroids[:, 0])
-#     return 1 * polar_angle + 0
 
 def topological_defect_director(nodes, triangles, charge, angular_offset=0.):
     centroids = np.mean(nodes[triangles], axis=1) # We need director at triangle, so we need triangle position, which we take to be centroids.
